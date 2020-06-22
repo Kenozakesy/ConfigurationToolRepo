@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6BFAB9EE-F35D-4C08-A56A-2E9AB7FE09AA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ConfigurationToolStructurePOC</RootNamespace>
+    <AssemblyName>ConfigurationToolStructurePOC</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Windows.Design.Interaction, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Business\Enums\SourceDest.cs" />
+    <Compile Include="Business\Interfaces\IParameterObject.cs" />
+    <Compile Include="Business\Interfaces\IRule.cs" />
+    <Compile Include="Business\Interfaces\IRuleSet.cs" />
+    <Compile Include="Business\Model\BinStock.cs" />
+    <Compile Include="Business\Model\BinsInSubRoute.cs" />
+    <Compile Include="Business\Model\LocType.cs" />
+    <Compile Include="Business\Model\OAProcessCellDefinition.cs" />
+    <Compile Include="Business\Model\ParameterDefinitionProcessCellType.cs" />
+    <Compile Include="Business\Model\ParameterTable.cs" />
+    <Compile Include="Business\Model\ProcessCellParameterMapping.cs" />
+    <Compile Include="Business\Model\TableParameterMapping.cs" />
+    <Compile Include="Business\Model\UnitsInSubRoute.cs" />
+    <Compile Include="Business\Model\OARecipe.cs" />
+    <Compile Include="Business\Model\Parameters\BinParameter.cs" />
+    <Compile Include="Business\Model\Parameters\ProcessCellParameter.cs" />
+    <Compile Include="Business\Model\Parameters\RouteParameter.cs" />
+    <Compile Include="Business\Model\Procedure.cs" />
+    <Compile Include="Business\Model\Sequence.cs" />
+    <Compile Include="Business\Model\OAUnitDefinition.cs" />
+    <Compile Include="Business\Ruleset\RuleBase.cs" />
+    <Compile Include="Business\Ruleset\RuleSet.cs" />
+    <Compile Include="Business\Ruleset\RuleSets\ParameterDefinitionCanBeCreatedRuleSet.cs" />
+    <Compile Include="Business\Ruleset\Rules\ParameterNameIsValidRule.cs" />
+    <Compile Include="Business\Services\BinParameterService.cs" />
+    <Compile Include="Business\Services\BinsInSubrouteService.cs" />
+    <Compile Include="Business\Services\ProcessCellParameterService.cs" />
+    <Compile Include="Business\Services\RouteParameterService.cs" />
+    <Compile Include="Business\Services\RouteService.cs" />
+    <Compile Include="Business\Services\SequenceService.cs" />
+    <Compile Include="Business\Services\SubrouteInRouteService.cs" />
+    <Compile Include="Business\Services\SubrouteService.cs" />
+    <Compile Include="Business\Services\OAUnitDefinitionService.cs" />
+    <Compile Include="DAL\Configurations\BinsInSubRouteConfiguration.cs" />
+    <Compile Include="DAL\Configurations\BinParameterConfiguration.cs" />
+    <Compile Include="DAL\Configurations\BinStockConfiguration.cs" />
+    <Compile Include="DAL\Configurations\LocTypeConfiguration.cs" />
+    <Compile Include="DAL\Configurations\OAProcessCellDefinitionConfiguration.cs" />
+    <Compile Include="DAL\Configurations\OARecipeConfiguration.cs" />
+    <Compile Include="DAL\Configurations\ParameterDefinitionConfiguration.cs" />
+    <Compile Include="DAL\Configurations\ParameterDefinitionProcessCellTypeConfiguration.cs" />
+    <Compile Include="DAL\Configurations\ParameterTableConfiguration.cs" />
+    <Compile Include="DAL\Configurations\ProcedureConfiguration.cs" />
+    <Compile Include="DAL\Configurations\ProcessCellParameterConfiguration.cs" />
+    <Compile Include="DAL\Configurations\ProcessCellParameterMappingConfiguration.cs" />
+    <Compile Include="DAL\Configurations\RouteParameterConfiguration.cs" />
+    <Compile Include="DAL\Configurations\OAUnitDefinitionConfiguration.cs" />
+    <Compile Include="DAL\Configurations\TableParameterMappingConfiguration.cs" />
+    <Compile Include="DAL\Configurations\UnitsInSubRouteConfiguration.cs" />
+    <Compile Include="DAL\Interfaces\IBinParameterRepository.cs" />
+    <Compile Include="DAL\Interfaces\IBinsinSubrouteRepository.cs" />
+    <Compile Include="DAL\Interfaces\IProcessCellParameterRepository.cs" />
+    <Compile Include="DAL\Interfaces\IRouteParameterRepository.cs" />
+    <Compile Include="DAL\Interfaces\IOAUnitDefinitionRepository.cs" />
+    <Compile Include="DAL\Repositories\BinParameterRepository.cs" />
+    <Compile Include="DAL\Repositories\BinsInSubrouteRepository.cs" />
+    <Compile Include="DAL\Repositories\ProcessCellParameterRepository.cs" />
+    <Compile Include="DAL\Repositories\RouteParameterRepository.cs" />
+    <Compile Include="DAL\Repositories\OAUnitDefinitionRepository.cs" />
+    <Compile Include="UI\Behaviours\MultiSelectionBehavior.cs" />
+    <Compile Include="UI\Interfaces\IAddParameterToObjectView.cs" />
+    <Compile Include="UI\Interfaces\ICreateBinView.cs" />
+    <Compile Include="UI\Interfaces\IEditSubrouteView.cs" />
+    <Compile Include="UI\Interfaces\ISetBinsView.cs" />
+    <Compile Include="UI\ViewModels\AddParameterToObjectViewModel.cs" />
+    <Compile Include="UI\ViewModels\CreateBinViewModel.cs" />
+    <Compile Include="UI\ViewModels\EditSubrouteViewModel.cs" />
+    <Compile Include="UI\ViewModels\SetBinsViewModel.cs" />
+    <Compile Include="UI\Views\AddParameterToObjectWindow.xaml.cs">
+      <DependentUpon>AddParameterToObjectWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\CreateBinWindow.xaml.cs">
+      <DependentUpon>CreateBinWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\EditSubrouteWindow.xaml.cs">
+      <DependentUpon>EditSubrouteWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\SetBinsWindow.xaml.cs">
+      <DependentUpon>SetBinsWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="UI\Views\AddParameterToObjectWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Views\CreateBinWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\CreateParameterDefinitionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\CreateProcesCellWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Views\CreateRouteWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Views\CreateSubrouteWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Views\EditSubrouteWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Business\Enums\Alignment.cs" />
+    <Compile Include="Business\Enums\ParameterType.cs" />
+    <Compile Include="Business\Enums\ProcessCellType.cs" />
+    <Compile Include="Business\Enums\Validation.cs" />
+    <Compile Include="Business\Interfaces\ITreeViewObject.cs" />
+    <Compile Include="Business\Model\Bin.cs" />
+    <Compile Include="Business\Model\FactoryConfig.cs" />
+    <Compile Include="Business\Model\Parameters\ParameterDefinition.cs" />
+    <Compile Include="Business\Model\ProcessCell.cs" />
+    <Compile Include="Business\Model\Route.cs" />
+    <Compile Include="Business\Model\Subroute.cs" />
+    <Compile Include="Business\Model\SubroutesInRoute.cs" />
+    <Compile Include="Business\Model\TreeViewObject.cs" />
+    <Compile Include="Business\Services\BinService.cs" />
+    <Compile Include="Business\Services\ParameterDefinitionService.cs" />
+    <Compile Include="Business\Services\ProcessCellService.cs" />
+    <Compile Include="Business\Singleton\GlobalListManagementClass.cs" />
+    <Compile Include="Business\Statics\Enumerations.cs" />
+    <Compile Include="Business\Statics\OrderObservableList.cs" />
+    <Compile Include="DAL\BaseRepository.cs" />
+    <Compile Include="DAL\Configurations\BinConfiguration.cs" />
+    <Compile Include="DAL\Configurations\ProcescellConfiguration.cs" />
+    <Compile Include="DAL\Configurations\RouteConfiguration.cs" />
+    <Compile Include="DAL\Configurations\SubrouteConfiguration.cs" />
+    <Compile Include="DAL\Configurations\SubroutesInRouteConfiguration.cs" />
+    <Compile Include="DAL\Context\ConfigurationToolContext.cs" />
+    <Compile Include="DAL\Context\IConfigurationToolContext.cs" />
+    <Compile Include="DAL\Interfaces\IBinRepository.cs" />
+    <Compile Include="DAL\Interfaces\IParameterDefinitionRepository.cs" />
+    <Compile Include="DAL\Interfaces\IProcescellRepository.cs" />
+    <Compile Include="DAL\Interfaces\IRepository.cs" />
+    <Compile Include="DAL\Interfaces\IRouteRepository.cs" />
+    <Compile Include="DAL\Interfaces\ISubrouteInRouteRepository.cs" />
+    <Compile Include="DAL\Interfaces\ISubrouteRepository.cs" />
+    <Compile Include="DAL\Repositories\BinRepository.cs" />
+    <Compile Include="DAL\Repositories\ParameterDefinitionRepository.cs" />
+    <Compile Include="DAL\Repositories\ProcessCellRepository.cs" />
+    <Compile Include="DAL\Repositories\RouteRepository.cs" />
+    <Compile Include="DAL\Repositories\SubroutesInRouteRepository.cs" />
+    <Compile Include="DAL\Repositories\SubrouteRepository.cs" />
+    <Compile Include="UI\Behaviours\MyCloneConverter.cs" />
+    <Compile Include="UI\Commands\RelayCommand.cs" />
+    <Compile Include="UI\Commands\RelayCommandT1.cs" />
+    <Compile Include="UI\Interfaces\ICreateParameterDefinitionView.cs" />
+    <Compile Include="UI\Interfaces\ICreateProcescellView.cs" />
+    <Compile Include="UI\Interfaces\ICreateRouteView.cs" />
+    <Compile Include="UI\Interfaces\ICreateSubrouteView.cs" />
+    <Compile Include="UI\Interfaces\IMainView.cs" />
+    <Compile Include="UI\Interfaces\IView.cs" />
+    <Compile Include="UI\ViewModels\CreateParameterDefinitionViewModel.cs" />
+    <Compile Include="UI\ViewModels\CreateProcescellViewModel.cs" />
+    <Compile Include="UI\ViewModels\CreateRouteViewModel.cs" />
+    <Compile Include="UI\ViewModels\CreateSubrouteViewModel.cs" />
+    <Compile Include="UI\ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="UI\ViewModels\ViewModel.cs" />
+    <Compile Include="UI\ViewModels\ViewModelBase.cs" />
+    <Compile Include="UI\Views\CreateParameterDefinitionWindow.xaml.cs">
+      <DependentUpon>CreateParameterDefinitionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\CreateProcesCellWindow.xaml.cs">
+      <DependentUpon>CreateProcesCellWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\CreateRouteWindow.xaml.cs">
+      <DependentUpon>CreateRouteWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\CreateSubrouteWindow.xaml.cs">
+      <DependentUpon>CreateSubrouteWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="UI\Views\SetBinsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Business\Model\DataBaseModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

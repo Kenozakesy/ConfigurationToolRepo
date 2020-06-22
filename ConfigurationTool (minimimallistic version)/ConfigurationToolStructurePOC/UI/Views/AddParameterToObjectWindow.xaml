@@ -1,0 +1,168 @@
+﻿<Window x:Class="ConfigurationToolStructurePOC.UI.Views.AddParameterToObjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:model="clr-namespace:ConfigurationToolStructurePOC.Business.Model"
+        mc:Ignorable="d"
+        Title="{Binding Path=ViewHeader}" MinHeight="400" MinWidth="800" Width="1000" WindowState="Maximized">
+
+    <Window.Resources>
+        <Style x:Key="BorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="2" />
+        </Style>
+        <Style x:Key="TextboxStyle" TargetType="Button">
+            <Setter Property="MinHeight" Value="20" />
+            <Setter Property="Margin" Value="0 5 0 0" />
+        </Style>
+        <Style x:Key="ButtonAddStyle" TargetType="Button">
+            <Setter Property="MinHeight" Value="20" />
+            <Setter Property="Margin" Value="0 5 0 0" />
+            <Setter Property="IsEnabled" Value="true" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=SelectedStandardParameter}" Value="{x:Null}" >
+                    <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="GridViewColumnHeader" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+            <Setter Property="Padding" Value="20 0 20 0"></Setter>
+        </Style>
+        <Style x:Key="ComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="IsEnabled" Value="True"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=AvailableStandardParameters.Count}" Value="0">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ListItemStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="0 0 0 1" />
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+
+            <Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Setter>
+            <Setter Property="ContextMenu">
+                <Setter.Value>
+                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                        <MenuItem Header="Remove" Command="{Binding Tag.DataContext.RemoveParameterFromObjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding }"/>
+                    </ContextMenu>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--<DataTemplate x:Key="ComboboxTemplate" DataType="{x:Type that:IParameterObject}">
+            <ComboBox ItemsSource="{Binding Path=ParameterDefinition.ValidValuesCombobox}" SelectedValue="{Binding Path=Value}" MinWidth="100"></ComboBox>
+        </DataTemplate>-->
+
+        <!--<DataTemplate x:Key="NumericTemplate" DataType="{x:Type that:IParameterObject}">
+            <Grid>
+                <TextBox Text="{Binding Path=Value}" />
+            </Grid>
+        </DataTemplate>-->
+
+        <!--<DataTemplate x:Key="TextTemplate" DataType="{x:Type that:IParameterObject}">
+            <TextBox Text="{Binding Path=Value}" MinWidth="50"/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type dia:ParameterDefinition}">
+            <TextBlock Text="{Binding Path=paf_ParNm}"></TextBlock>
+        </DataTemplate>-->
+
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" ></ColumnDefinition>
+            <ColumnDefinition Width="3" ></ColumnDefinition>
+            <ColumnDefinition Width="0.2*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource BorderStyle}">
+            <ListView ItemContainerStyle="{StaticResource ListItemStyle}" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=ParameterList}">
+                <ListView.View>
+                    <GridView>
+
+                        <GridViewColumn Header="ParName" Width="Auto" HeaderContainerStyle="{StaticResource GridViewColumnHeader}" DisplayMemberBinding="{Binding Path=ParameterDefinition.paf_ParNm}" />
+                        <GridViewColumn Header="Description" Width="auto" HeaderContainerStyle="{StaticResource GridViewColumnHeader}" DisplayMemberBinding="{Binding Path=ParameterDefinition.paf_ParDesc}"/>
+                        <GridViewColumn Header="ValueUOM" Width="auto" HeaderContainerStyle="{StaticResource GridViewColumnHeader}" DisplayMemberBinding="{Binding Path=ParameterDefinition.paf_ParValueUOM}"/>
+                                           
+                        <!--<GridViewColumn Header="Value" Width="auto" HeaderContainerStyle="{StaticResource GridViewColumnHeader}">
+                            <GridViewColumn.CellTemplate>
+
+                                <DataTemplate DataType="{x:Type that:IParameterObject}">
+                                    <ContentControl Content="{Binding }">
+                                        <ContentControl.Style>
+                                            <Style TargetType="{x:Type ContentControl}">
+
+                                                --><!-- Default Template --><!--
+                                                <Setter Property="ContentTemplate" Value="{StaticResource TextTemplate}" />
+
+                                                --><!-- Triggers to change Template --><!--
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=ParameterDefinition.ValidValuesCombobox.Count, Converter={local:GreaterThan 0}}" Value="true">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource ComboboxTemplate}" />
+                                                    </DataTrigger>
+
+                                                    <DataTrigger  Binding="{Binding Path=ParameterDefinition.Validvalues.Item2, Converter={local:GreaterThan 0}}" Value="true">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource NumericTemplate}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                                
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>-->
+
+                        <GridViewColumn Header="Valid Values" Width="auto" HeaderContainerStyle="{StaticResource GridViewColumnHeader}" DisplayMemberBinding="{Binding Path=ParameterDefinition.paf_ValidValues}" />
+                        <GridViewColumn Header="Is standard parameter" Width="auto" HeaderContainerStyle="{StaticResource GridViewColumnHeader}" DisplayMemberBinding="{Binding Path=ParameterDefinition.paf_IsStandardPar}"/>
+
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Border>
+
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="3" BorderBrush="Black" BorderThickness="0.5 0" ></GridSplitter>
+
+        <Border Grid.Column="2" Style="{StaticResource BorderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="8" Orientation="Vertical">
+                    <Label>Parameters</Label>
+                    <ComboBox Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding Path=AvailableStandardParameters}" SelectedItem="{Binding Path=SelectedStandardParameter}"></ComboBox>
+                    <Button Style="{StaticResource ButtonAddStyle}" Margin="0 5 0 20" Command="{Binding Path=AddParameterToObjectCommand}">Add</Button>
+
+                    <Label>Customer Parameters</Label>
+                    <ComboBox></ComboBox>
+                    <Button Style="{StaticResource TextboxStyle}" >Add</Button>
+
+                    <Button Style="{StaticResource TextboxStyle}" Margin="0 5 0 20" Command="{Binding OpenCreateParameterWindowCommand}">Create parameter</Button>
+
+                    <Label>Add required Parameters</Label>
+                    <Button Style="{StaticResource TextboxStyle}" Command="{Binding AddRequiredParametersCommand}">Add</Button>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Margin="8" VerticalAlignment="Bottom">
+                    <Button Style="{StaticResource TextboxStyle}" Command="{Binding FinishEditingCommand}">Finish</Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>

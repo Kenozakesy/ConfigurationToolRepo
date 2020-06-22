@@ -1,0 +1,427 @@
+﻿<Window x:Class="ConfigurationToolStructurePOC.UI.Views.CreateParameterDefinitionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:model="clr-namespace:ConfigurationToolStructurePOC.Business.Model"
+        xmlns:behaviours="clr-namespace:ConfigurationToolStructurePOC.UI.Behaviours"
+        Title="CreateParameterDefinitionWindow" Height="500" Width="800" WindowState="Maximized">
+    <Window.Resources>
+        <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Padding" Value="10 5 0 12" />
+        </Style>
+        <Style x:Key="ScrollBorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="0 0 0 1" />
+            <Setter Property="Padding" Value="0 10 0 10" />
+            <Setter Property="Margin" Value="2" />
+        </Style>
+        <Style x:Key="BorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="2" />
+        </Style>
+        <Style x:Key="GridViewColumnHeader" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+        <Style x:Key="TextboxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="WhiteSmoke"></Setter>
+            <Setter Property="BorderBrush" Value="Gray"></Setter>
+            <Setter Property="Height" Value="25"></Setter>
+            <Setter Property="MinWidth" Value="140"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="Margin" Value="0 0 20 5"></Setter>
+        </Style>
+        <Style x:Key="ComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="Background" Value="WhiteSmoke"></Setter>
+            <Setter Property="BorderBrush" Value="Gray"></Setter>
+            <Setter Property="IsEditable" Value="False"></Setter>
+            <Setter Property="Height" Value="25"></Setter>
+            <Setter Property="MinWidth" Value="140"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="Margin" Value="0 0 20 0"></Setter>
+        </Style>
+        <Style x:Key="ComboBoxDoubleColumnStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="Background" Value="WhiteSmoke"></Setter>
+            <Setter Property="BorderBrush" Value="Gray"></Setter>
+            <Setter Property="IsEditable" Value="False"></Setter>
+            <Setter Property="Height" Value="25"></Setter>
+            <Setter Property="MinWidth" Value="140"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="Margin" Value="0 0 20 0"></Setter>
+        </Style>
+        <Style x:Key="ListviewLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="BorderThickness" Value="0 0 0 1"></Setter>
+            <Setter Property="BorderBrush" Value="LightGray"></Setter>
+        </Style>
+        <Style x:Key="ListviewLabelHeaderStyle" TargetType="{x:Type Label}">
+            <Setter Property="BorderThickness" Value="0 0 0 1"></Setter>
+            <Setter Property="BorderBrush" Value="LightGray"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+        </Style>
+        <Style x:Key="MyLabelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Style.Triggers>
+                <Trigger Property="MenuItem.IsMouseOver" Value="true">
+                    <Setter Property="Background" Value="{Binding Path=Colour}"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem,AncestorLevel=1}, Path=IsMouseOver}" Value="True" >
+                    <Setter Property="Background" Value="{Binding Path=Colour, Converter={x:Static behaviours:MyCloneConverter.Instance}}"/>
+
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                      Storyboard.TargetProperty="(Label.Background).(SolidColorBrush.Opacity)" 
+                                      From="0.1" To="1" Duration="0:0:0.8" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--<DataTemplate DataType="{x:Type model:ParameterDefinition}">
+            <Label Content="{Binding Path=paf_ParNm}" BorderBrush="{Binding Path=Brush}" BorderThickness="5 0 0 0" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}"  Style="{StaticResource MyLabelStyle}">
+
+                <Label.ContextMenu>
+                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                        <MenuItem Header="Delete" Command="{Binding Tag.DataContext.DeleteCustomerParameterCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding }"/>
+                        <MenuItem Header="Edit" CommandParameter="{Binding}" />
+                    </ContextMenu>
+                </Label.ContextMenu>
+
+            </Label>
+        </DataTemplate>-->
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"></RowDefinition>
+            <RowDefinition Height="80"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="80"></ColumnDefinition>
+            <ColumnDefinition Width="3"></ColumnDefinition>
+            <ColumnDefinition Width="2*" MinWidth="500"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource BorderStyle}" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0 ">Parameters</TextBlock>
+                <TreeView Grid.Row="1" ItemsSource="{Binding Path=CustomerParameterList}"></TreeView>
+
+            </Grid>
+        </Border>
+
+        <GridSplitter Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" Width="3" BorderBrush="Black" BorderThickness="0.5 0" ></GridSplitter>
+
+        <Border Style="{StaticResource BorderStyle}" Grid.Column="2" Grid.Row="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.9*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Variable name" BorderBrush="Black" BorderThickness="0 0 0 1"></Label>
+                <Label Grid.Column="1" Content="Parameter value" BorderBrush="Black" BorderThickness="0 0 0 1" ></Label>
+
+                <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Margin="5 5 5 0">
+                    <StackPanel>
+
+                        <!--Required-->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Required" FontWeight="Bold" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>                            
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Parameter name" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Text="{Binding ParNm}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" ></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Parameter description" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Text="{Binding ParDesc}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="BeforeSep" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Text="{Binding BeforeSep}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="AfterSep" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Text="{Binding AfterSep}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Type" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <ComboBox Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding TypeValuesList}" SelectedIndex="0" SelectedItem="{Binding Path=Type}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></ComboBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Alignment" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <ComboBox Style="{StaticResource ComboBoxStyle}" SelectedItem="{Binding Path=Alignm}" ItemsSource="{Binding AlignmentValuesList}" SelectedIndex="0" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></ComboBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Editable" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.ColumnSpan="2" Grid.Column="1" SelectedIndex="{Binding Path=Editable}" Grid.Row="0">
+                                <ComboBoxItem Content="False" IsSelected="True"></ComboBoxItem>
+                                <ComboBoxItem Content="True"></ComboBoxItem>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Display to user" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <ComboBox Style="{StaticResource ComboBoxStyle}" SelectedIndex="{Binding Path=DisplayToUser}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0">
+                                <ComboBoxItem Content="False" IsSelected="True"></ComboBoxItem>
+                                <ComboBoxItem Content="True"></ComboBoxItem>
+                            </ComboBox>
+                        </Grid>
+
+                        <!--Not Required-->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            
+                            <TextBlock Text="" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>                         
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Not required" FontWeight="Bold" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="ValueUOM" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Valid Values" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Default Value" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Display sequence number" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Display width" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="UOM text ID" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Style="{StaticResource ScrollBorderStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></Border>
+                            <TextBlock Text="Column" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                            <TextBox Style="{StaticResource TextboxStyle}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                        </Grid>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+            </Grid>
+        </Border>
+
+        <Border Style="{StaticResource BorderStyle}" Grid.Column="2" Grid.Row="1">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <RadioButton IsChecked="True">Procescell Parameter</RadioButton>
+                <RadioButton >Route Parameter</RadioButton>
+                <RadioButton >Bin Parameter</RadioButton>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource BorderStyle}" Grid.Column="2" Grid.Row="2">
+            <Grid Margin="10">
+                <Button MinWidth="90" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding Path=CreateCustomParameterCommand}">Create Parameter</Button>
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>

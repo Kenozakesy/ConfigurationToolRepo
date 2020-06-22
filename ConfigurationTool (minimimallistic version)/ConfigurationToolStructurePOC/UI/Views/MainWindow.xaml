@@ -1,0 +1,323 @@
+﻿<Window x:Class="ConfigurationToolStructurePOC.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:model="clr-namespace:ConfigurationToolStructurePOC.Business.Model"
+        xmlns:behaviours="clr-namespace:ConfigurationToolStructurePOC.UI.Behaviours"
+        Title="MainWindow" Height="800" Width="1600" WindowState="Maximized">
+    
+    <Window.Resources>
+        <Style x:Key="ListItemStyle" TargetType="{x:Type ListViewItem}" >
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="0 0 0 1" />
+        </Style>
+        <Style x:Key="ItemContainerStyle" TargetType="{x:Type TreeViewItem}" >
+            <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded}" />
+        </Style>
+        <Style x:Key="TreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
+            <Setter Property="Margin" Value="12 0 0 0" />
+            <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
+        </Style>
+        <Style x:Key="HeaderStyle" TargetType="TreeViewItem">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style x:Key="MenuItemBinStyle" TargetType="MenuItem">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Unit}" Value="{x:Null}">
+                    <Setter Property ="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="BorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="gray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="2" />
+        </Style>
+        <Style x:Key="GridViewColumnHeader" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Left"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+        </Style>
+        <Style x:Key="MyLabelStyleProc" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="BorderBrush" Value="{Binding Path=Colour}" />
+            <Setter Property="BorderThickness" Value="8 0 0 0" />
+            <Style.Triggers>
+                <Trigger Property="MenuItem.IsMouseOver" Value="true">
+                    <Setter Property="Background" Value="{Binding Path=Colour}"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem,AncestorLevel=1}, Path=IsMouseOver}" Value="True" >
+                    <Setter Property="Background" Value="{Binding Path=Colour, Converter={x:Static behaviours:MyCloneConverter.Instance}}" />
+
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                      Storyboard.TargetProperty="(Label.Background).(SolidColorBrush.Opacity)" 
+                                      From="0.1" To="1" Duration="0:0:0.8" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="MyLabelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="BorderBrush" Value="{Binding Path=Colour}" />
+            <Setter Property="BorderThickness" Value="5 0 0 0" />
+            <Style.Triggers>
+                <Trigger Property="MenuItem.IsMouseOver" Value="true">
+                    <Setter Property="Background" Value="{Binding Path=Colour}"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem,AncestorLevel=1}, Path=IsMouseOver}" Value="True" >
+                    <Setter Property="Background" Value="{Binding Path=Colour, Converter={x:Static behaviours:MyCloneConverter.Instance}}"/>
+
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                      Storyboard.TargetProperty="(Label.Background).(SolidColorBrush.Opacity)" 
+                                      From="0.1" To="1" Duration="0:0:0.8" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <HierarchicalDataTemplate ItemsSource="{Binding Path=Routes}" DataType="{x:Type model:Procescell}">
+
+            <Label Content="{Binding Path=prc_ProcescellId}" ContentStringFormat="ProcesCell: {0}" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MyLabelStyleProc}">
+                <Label.ContextMenu>
+                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+
+                        <MenuItem Header="Manage Subroutes" Command="{Binding Tag.DataContext.OpenCreateSubrouteWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding }"/>
+                        <MenuItem Header="Create Route"  Command="{Binding Tag.DataContext.OpenCreateRouteWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
+                        <MenuItem Header="Delete" Command="{Binding Tag.DataContext.DeleteObjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}" />
+                        <Separator />
+                        <MenuItem Header="Set Parameters (not operational)"  Command="{Binding Tag.DataContext.OpenAddParameterToObjectWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
+                        <MenuItem Header="Validate (not operational)" Command="{Binding Tag.DataContext.ValidateObjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
+
+                    </ContextMenu>
+                </Label.ContextMenu>
+
+            </Label>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate DataType="{x:Type model:OAUnitDefinition}">
+
+            <Label Content="{Binding Path=oud_OAUnitId}" ContentStringFormat="Unit: {0}" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MyLabelStyle}">
+                <!--<Label.ContextMenu>
+                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+
+                    </ContextMenu>
+                </Label.ContextMenu>-->
+            </Label>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate ItemsSource="{Binding Path=SubroutesInRoutes}" DataType="{x:Type model:Route}">
+            <Label Content="{Binding Path=rot_RouteNm}" ContentStringFormat="Route: {0}" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MyLabelStyle}">
+                <Label.ContextMenu>
+                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+
+                        <MenuItem Header="set Subroutes" Command="{Binding Tag.DataContext.OpenEditSubrouteWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
+                        <MenuItem Header="Delete" Command="{Binding Tag.DataContext.DeleteObjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}" />
+                        <Separator />
+                        <MenuItem Header="Set Parameters (not operational)"  Command="{Binding Tag.DataContext.OpenAddParameterToObjectWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
+                        <MenuItem Header="Validate (not operational)" Command="{Binding Tag.DataContext.ValidateObjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
+
+                    </ContextMenu>
+                </Label.ContextMenu>
+            </Label>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate ItemsSource="{Binding Path=Subroute.BinsInSubRoutes}" DataType="{x:Type model:SubroutesInRoute}">
+            <Label Content="{Binding Path=Subroute.sur_SubRouteNm}" ContentStringFormat="Subroute: {0}"  Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MyLabelStyle}">
+                <Label.ContextMenu>
+                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+
+                        <MenuItem Header="Set Bins" Command="{Binding Tag.DataContext.OpenSetBinsWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
+                        <MenuItem Header="Remove" Command="{Binding Tag.DataContext.DeleteObjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}" />
+
+                    </ContextMenu>
+                </Label.ContextMenu>
+            </Label>
+        </HierarchicalDataTemplate>
+
+        <DataTemplate DataType="{x:Type model:BinsInSubRoute}">
+            <Label Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MyLabelStyle}">
+                <TextBlock>
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{} Bin: {0} - {1}">
+                            <Binding Path="bir_BinId" />
+                            <Binding Path="bir_SourceDest" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <!--<Label.ContextMenu>
+                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                        --><!--<MenuItem Header="Remove" Command="{Binding Tag.DataContext.DeleteClickCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>-->
+                        <!--<MenuItem Header="Set Parameters"  Command="{Binding Tag.DataContext.OpenAddParameterToObjectWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>--><!--
+                    </ContextMenu>
+                </Label.ContextMenu>-->
+
+            </Label>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:Bin}" >
+            <Label Content="{Binding Path=bin_BinId}" ContentStringFormat="Bin: {0}" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MyLabelStyle}">
+
+                <Label.ContextMenu>
+                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                        <MenuItem Header="Delete bin" Command="{Binding Tag.DataContext.DeleteObjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
+                        <MenuItem Header="Set Parameters (Not operational)"  Command="{Binding Tag.DataContext.OpenAddParameterToObjectWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
+                    </ContextMenu>
+                </Label.ContextMenu>
+
+            </Label>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:ParameterDefinition}">
+            <Label Content="{Binding Path=paf_ParNm}" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}"  Style="{StaticResource MyLabelStyle}">
+
+                <Label.ContextMenu>
+                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}" Visibility="Collapsed">
+                        <MenuItem Header="Delete (not operational)" Command="{Binding Tag.DataContext.DeleteCustomerParameterCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding }"/>
+                        <MenuItem Header="Edit (not operational)" CommandParameter="{Binding}" />
+                    </ContextMenu>
+                </Label.ContextMenu>
+
+            </Label>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.Resources >
+            <Style TargetType="Button" >
+                <Setter Property="Margin" Value="1" />
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.7*" MinWidth="300"></ColumnDefinition>
+            <ColumnDefinition Width="3"></ColumnDefinition>
+            <ColumnDefinition Width="2*" MinWidth="600"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource BorderStyle}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
+            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" >
+                <TabControl TabStripPlacement="Top"  BorderBrush="Gainsboro">
+
+                    <TabItem Header="Menu" >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>Room for improvement here</TextBlock>
+                        </StackPanel>
+                    </TabItem>
+
+                </TabControl>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource BorderStyle}">
+            <TreeView BorderThickness="0">
+
+                <TreeViewItem Header="Configuration tree" IsExpanded="True" FontSize="30" FontWeight="Bold">
+                    <Border BorderBrush="Gray" BorderThickness="0 1 0 1" Width="230" Height="4" HorizontalAlignment="Center" />
+
+                    <TreeViewItem Header="ProcessCells" IsExpanded="True" ItemsSource="{Binding Path=Procescells}" ItemContainerStyle="{StaticResource TreeViewItemStyle}" Style="{StaticResource HeaderStyle}" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+
+                        <TreeViewItem.ContextMenu>
+                            <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+
+                                <MenuItem Header="Create ProcesCell" ItemsSource="{Binding Path=ProcesCellTypes}">
+
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style>
+                                            <Setter Property="MenuItem.Header" Value="{Binding}"/>
+                                            <Setter Property="MenuItem.Command" Value="{Binding Tag.DataContext.OpenCreateProcescellWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                            <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+
+                            </ContextMenu>
+                        </TreeViewItem.ContextMenu>
+                    </TreeViewItem>
+
+                    <TreeViewItem Header="Units" IsExpanded="False" ItemsSource="{Binding Path=Units}" ItemContainerStyle="{StaticResource TreeViewItemStyle}" Style="{StaticResource HeaderStyle}" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+
+                        <TreeViewItem.ContextMenu>
+                            <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+
+                                <!--<MenuItem Header="Create ProcesCell" ItemsSource="{Binding Path=ProcesCellTypes}">
+
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style>
+                                            <Setter Property="MenuItem.Header" Value="{Binding}"/>
+                                            <Setter Property="MenuItem.Command" Value="{Binding Tag.DataContext.OpenCreateProcescellWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                            <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>-->
+
+                            </ContextMenu>
+                        </TreeViewItem.ContextMenu>
+                    </TreeViewItem>
+
+                    <TreeViewItem Header="Bins" ItemsSource="{Binding Path=Bins}" ItemContainerStyle="{StaticResource TreeViewItemStyle}" Style="{StaticResource HeaderStyle}" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                        <TreeViewItem.ContextMenu>
+                            <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+
+                                <MenuItem Header="Create Bin" Command="{Binding Tag.DataContext.OpenCreateBinWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">                          
+                                </MenuItem>
+
+                            </ContextMenu>
+                        </TreeViewItem.ContextMenu>
+                    </TreeViewItem>
+
+                    <Border BorderBrush="Gray" BorderThickness="0 1 0 1" Width="230" Height="4" HorizontalAlignment="Center" />
+
+                    <TreeViewItem Header="All Parameter definitions" ItemsSource="{Binding Path=ParametersDefinitions}" ItemContainerStyle="{StaticResource TreeViewItemStyle}" Style="{StaticResource HeaderStyle}" Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                        <TreeViewItem.ContextMenu>
+                            <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+
+                                <MenuItem Header="Create new parameter" Command="{Binding Tag.DataContext.OpenCreateParameterDefinitionWindowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+
+                            </ContextMenu>
+                        </TreeViewItem.ContextMenu>
+                    </TreeViewItem>
+
+                </TreeViewItem>
+
+            </TreeView>
+        </Border>
+
+        <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" Width="3" BorderBrush="Black" BorderThickness="0.5 0" ></GridSplitter>
+
+        <Border Style="{StaticResource BorderStyle}" Grid.Column="2" Grid.Row="1">
+            <ListView Margin="0" ItemsSource="{Binding Path=ListView}" ItemContainerStyle="{StaticResource ListItemStyle}">
+                <ListView.View>
+                    <GridView>
+
+                        <GridViewColumn Header="Name" Width="120" HeaderContainerStyle="{StaticResource GridViewColumnHeader}" DisplayMemberBinding="{Binding Path=Name}" />
+                        <GridViewColumn Header="Value" Width="250" HeaderContainerStyle="{StaticResource GridViewColumnHeader}" DisplayMemberBinding="{Binding Path=Value}"/>
+                        <GridViewColumn Header="Original object" Width="180" HeaderContainerStyle="{StaticResource GridViewColumnHeader}" DisplayMemberBinding="{Binding Path=OrginalObject}"/>
+
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+        </Border>
+
+    </Grid>
+</Window>
